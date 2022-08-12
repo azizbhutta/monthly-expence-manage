@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:monthly_expense_manage/Pages/Account_page.dart';
 
+import 'Pages/Categories_page.dart';
+import 'Pages/Expense_page.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -25,32 +28,32 @@ class NavBar extends StatelessWidget {
                 backgroundImage: NetworkImage(
                   'https://oflutter.com/wp-content/uploads/2021/02/girl-profile.png',
                 ),
-              )
+              )),
+          ListTile(
+              leading: const Icon(Icons.account_circle),
+              title: const Text('Add Account'),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (ctx) => Account_Page()))),
+          ListTile(
+            leading: const Icon(Icons.category),
+            title: const Text('Add Category'),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (ctx) =>  Categories_Page()))
           ),
           ListTile(
-            onTap: (){},
-            leading: Icon(Icons.account_circle),
-            title: Text('Add Account'),
+            leading: const Icon(Icons.receipt_outlined),
+            title: const Text('Expense Record'),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (ctx) => const Expense_Page()))
           ),
+          const Divider(),
           ListTile(
-            onTap: (){},
-            leading: Icon(Icons.category),
-            title: Text('Add Categary'),
-          ),
-          ListTile(
-            onTap: (){},
-            leading: Icon(Icons.receipt_outlined),
-            title: Text('Expense Record'),
-          ),
-          Divider(),
-          ListTile(
-            onTap: (){},
-            title: Text('Exit'),
-            leading: Icon(Icons.exit_to_app),
+            onTap: () {},
+            title: const Text('Exit'),
+            leading: const Icon(Icons.exit_to_app),
           ),
         ],
       ),
-
     );
   }
 }
