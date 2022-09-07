@@ -52,6 +52,14 @@ class NavBar extends StatelessWidget {
             title: const Text('Exit'),
             leading: const Icon(Icons.exit_to_app),
           ),
+
+          // TODO Just For Practice
+          const Divider(),
+          ListTile(
+            onTap: () {},
+            title: const Text('Exit'),
+            leading: const Icon(Icons.exit_to_app),
+          ),
         ],
       ),
     );
