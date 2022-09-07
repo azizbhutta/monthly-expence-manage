@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:monthly_expense_manage/NavBar.dart';
 import 'package:monthly_expense_manage/Pages/home_page.dart';
 
 
@@ -13,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
