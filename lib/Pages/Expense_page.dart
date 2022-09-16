@@ -3,6 +3,9 @@ import 'package:math_expressions/math_expressions.dart';
 import 'package:monthly_expense_manage/Pages/Account_page.dart';
 import 'package:monthly_expense_manage/Pages/Categories_page.dart';
 
+import '../DbHelper/account_database.dart';
+import '../Models/account_model.dart';
+
 class SimpleCalculator extends StatefulWidget {
   const SimpleCalculator({Key? key}) : super(key: key);
 
@@ -11,6 +14,7 @@ class SimpleCalculator extends StatefulWidget {
 }
 
 class _SimpleCalculatorState extends State<SimpleCalculator> {
+
   String equation = "0";
   String result = "0";
   String expression = "";
@@ -86,7 +90,6 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
       }
     });
   }
-
   Widget buildButton(
       String buttonText, double buttonHeight, Color buttonColor) {
     return Container(
@@ -110,6 +113,25 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
     );
   }
 
+  Future<List<AccountModel>>? accountList;
+  DBHelper? dbHelper;
+
+  String? myList;
+  List<DBHelper> categoryItemList = [];
+
+  AccountModel? accountModel;
+
+  @override
+  void initState() {
+    super.initState();
+    dbHelper = DBHelper();
+    loadData();
+  }
+
+  loadData() async{
+    accountList = dbHelper!.getCartListWithUserId();
+    print("Account List Data " + accountList.toString());
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,42 +153,79 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
             padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
             child: Text(result, style: TextStyle(fontSize: resultFontSize)),
           ),
-          // SizedBox(
-          //   height: 50.0,
-          //   child: TextButton(
-          //     onPressed: ,
-          //   ),
-          // )
+
           Row(
             children: [
-              InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (ctx) =>  Account_Page()));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 0),
-                  child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                        width: 100,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Account Cash",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black54,
-                                fontSize: 15),
-                          ),
-                        ),
-                      )),
-                ),
+              Padding(
+                     padding: const EdgeInsets.only(left: 0),
+                child: Align(
+                         alignment: Alignment.topLeft,
+                  child: Expanded(
+                    child: FutureBuilder<List<AccountModel>>(
+                      future: dbHelper?.getCartListWithUserId(),
+                      builder: (BuildContext context, AsyncSnapshot<List<AccountModel>> snapshot){
+                        if(!snapshot.hasData) return const CircularProgressIndicator();
+                        return DropdownButton<AccountModel>(
+                            isExpanded: false,
+                            hint: const Text("Select User"),
+                            items: snapshot.data!.map((user) => DropdownMenuItem<AccountModel>(
+                              child: Text(user.name),
+                              value: user,
+                            )).toList(),
+                            onChanged: (AccountModel? myAccount){
+                              setState(() {
+                                accountModel = myAccount;
+                              });
+                            });
+                      },
+                    )  ,
+                  ),
+
+                // child: DropdownButton (
+                //     items: const [
+                //       DropdownMenuItem (
+                //         value: 1,
+                //            child :  Text("Name"),
+                //       )
+                //     ],
+                //     onChanged: (_value)=> {
+                //       print (_value.toString())},
+                //   // setState((){
+                //   //   value = _value;
+                //   // });
+                //   hint: const Text ("Account Cash"),
+                // ),
               ),
+              ),
+                  // Text("$value"),
+              // InkWell(
+              //   onTap: () {
+              //     Navigator.pushReplacement(context,
+              //         MaterialPageRoute(builder: (ctx) =>  Account_Page()));
+              //   },
+              //   child: Padding(
+              //     padding: const EdgeInsets.only(left: 0),
+              //     child: Align(
+              //         alignment: Alignment.topLeft,
+              //         child: Container(
+              //           width: 100,
+              //           height: 40,
+              //           decoration: BoxDecoration(
+              //             color: Colors.white,
+              //             borderRadius: BorderRadius.circular(20.0),
+              //           ),
+              //           child: const Center(
+              //             child: Text(
+              //               "Account Cash",
+              //               style: TextStyle(
+              //                   fontWeight: FontWeight.w500,
+              //                   color: Colors.black54,
+              //                   fontSize: 15),
+              //             ),
+              //           ),
+              //         )),
+              //   ),
+              // ),
               GestureDetector(
                 onTap: () {
                   _selectDate(context);
@@ -224,40 +283,45 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
               ),
             ],
           ),
+
+
+
+
           // const SizedBox(
-          //   height: 20,
+          //   height: 5,
           // ),
-          // GestureDetector(
-          //   onTap: () {
-          //   },
-          //   child: Row(
-          //     children: [
-          //       Padding(
-          //         padding: const EdgeInsets.only(right: 0),
-          //         child: Align(
-          //             alignment: Alignment.topRight,
-          //             child: Container(
-          //               width: 100,
-          //               height: 40,
-          //               decoration: BoxDecoration(
-          //                 color: Colors.blue,
-          //                 borderRadius: BorderRadius.circular(20.0),
-          //               ),
-          //               child:  const Center(
-          //                 child: Text(
-          //                   "Select Categories",
-          //                   style: TextStyle(
-          //                       fontWeight: FontWeight.w500,
-          //                       color: Colors.white,
-          //                       fontSize: 20),
-          //                 ),
-          //               ),
-          //             )),
-          //       ),
-          //     ],
-          //   ),
+          // Row(
+          //   children: [
+          //     const Padding(
+          //                 padding: EdgeInsets.only(left: 0),
+          //             child: Align(
+          //               alignment: Alignment.topLeft,
+          //             )
+          //     ),
+          //     Expanded(
+          //       child: FutureBuilder<List<AccountModel>>(
+          //         future: dbHelper?.getCartListWithUserId(),
+          //         builder: (BuildContext context, AsyncSnapshot<List<AccountModel>> snapshot){
+          //           if(!snapshot.hasData) return const CircularProgressIndicator();
+          //           return DropdownButton<AccountModel>(
+          //             isExpanded: false,
+          //               hint: const Text("Select User"),
+          //               items: snapshot.data!.map((user) => DropdownMenuItem<AccountModel>(
+          //                   child: Text(user.name),
+          //                 value: user,
+          //               )).toList(),
+          //               onChanged: (AccountModel? myAccount){
+          //                 setState(() {
+          //                   accountModel = myAccount;
+          //                 });
+          //               });
+          //         },
+          //       )  ,
+          //     ),
+          //   ],
           // ),
-          //  const Expanded(child: Divider()),
+
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

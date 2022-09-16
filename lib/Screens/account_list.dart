@@ -20,6 +20,8 @@ class _AccountListScreenState extends State<AccountListScreen> {
 
 
   late Future<List<AccountModel>> accountList;
+
+  Future<List>? _users;
   DBHelper? dbHelper;
 
 
@@ -32,7 +34,12 @@ class _AccountListScreenState extends State<AccountListScreen> {
 
   loadData() async{
     accountList = dbHelper!.getCartListWithUserId();
-    print(accountList);
+
+    print(accountList.toString());
+
+    setState(() {
+      _users = accountList;
+    });
   }
 
   // Update Data

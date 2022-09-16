@@ -162,7 +162,7 @@ class CategoriesDBHelper {
 
   _onCreate(Database db, int version) async {
     await  db.execute(
-      "CREATE TABLE myCategories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)",
+      "CREATE TABLE myCategories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, icon Uint8List NOT NULL)",
     );
   }
 

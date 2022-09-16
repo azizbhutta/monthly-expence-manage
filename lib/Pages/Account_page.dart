@@ -5,7 +5,6 @@ import 'package:monthly_expense_manage/DbHelper/account_database.dart';
 import '../Screens/account_list.dart';
 // import 'package:monthly_expense_manage/Screens/account_list.dart';
 
-
 class Account_Page extends StatefulWidget {
   Account_Page({Key? key}) : super(key: key);
 
@@ -14,19 +13,15 @@ class Account_Page extends StatefulWidget {
 }
 
 class _Account_PageState extends State<Account_Page> {
-
   final formKey = GlobalKey<FormState>();
   final textController = TextEditingController();
   final amountController = TextEditingController();
 
-
-
   DBHelper? dbHelper;
 
-
-   // validation(){
-   //  if(formKey.currentState!.validate()){
-   //    dbHelper?.insert(
+  // validation(){
+  //  if(formKey.currentState!.validate()){
+  //    dbHelper?.insert(
   //         AccountModel(
   //           name: textController.text.toString(),
   //           amount: int.parse(amountController.text.toString()),
@@ -45,14 +40,14 @@ class _Account_PageState extends State<Account_Page> {
   // }
 
   // TODO Add Account Data
-  validation(){
-    if(formKey.currentState!.validate()){
-      dbHelper?.insert(
-          AccountModel(
-              amount: int.parse(amountController.text.toString()),
-              name: textController.text.toString(),
-          )
-      ).then((value) {
+  validation() {
+    if (formKey.currentState!.validate()) {
+      dbHelper
+          ?.insert(AccountModel(
+        amount: int.parse(amountController.text.toString()),
+        name: textController.text.toString(),
+      ))
+          .then((value) {
         print("Data Added");
         Fluttertoast.showToast(msg: "Data Added");
         amountController.clear();
@@ -60,9 +55,10 @@ class _Account_PageState extends State<Account_Page> {
       }).onError((error, stackTrace) {
         print(error.toString());
       });
-    }else{
+    } else {
       Fluttertoast.showToast(msg: 'Please Provide the required information');
       print("Enter The Information in the Textfields");
+
     }
   }
 
@@ -74,86 +70,96 @@ class _Account_PageState extends State<Account_Page> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: const Color(0xffffefd5),
-    // appBar: AppBar(
-    //   title: const Text('Add Account'),
-    //   backgroundColor: Colors.green,
-    // ),
-  appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.redAccent.withOpacity(0.8),
-        title: const Text("Add Amount", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-        leading: IconButton(
-          onPressed: (){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AccountListScreen()));
-          },
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white,),
-        ),
-      ),
-    body: Padding(
-      padding : const EdgeInsets.all(20.0),
-    child: Form(
-      key: formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextFormField(
-            controller: textController,
-            validator: (value){
-              if(value!.isEmpty){
-                return "Please Provide Your FirstName";
-              }
-              return null;
+        backgroundColor: const Color(0xffffefd5),
+        // appBar: AppBar(
+        //   title: const Text('Add Account'),
+        //   backgroundColor: Colors.green,
+        // ),
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.redAccent.withOpacity(0.8),
+          title: const Text(
+            "Add Amount",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AccountListScreen()));
             },
-            decoration: InputDecoration(
-              hintText: 'Name',
-            border: const OutlineInputBorder(),
-            suffixIcon : IconButton(
-                onPressed: (){
-              textController.clear();
-          },
-            icon: const Icon(Icons.clear),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
             ),
-            ) ,
           ),
-          const SizedBox(
-            height: 10,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  controller: textController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please Provide Your FirstName";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Name',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        textController.clear();
+                      },
+                      icon: const Icon(Icons.clear),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: amountController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please Provide Your amount";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Amount',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        amountController.clear();
+                      },
+                      icon: const Icon(Icons.clear),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    validation();
+                  },
+                  color: Colors.cyan,
+                  child:
+                      const Text('Add', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
           ),
-          TextFormField(
-            keyboardType: TextInputType.number,
-            controller: amountController,
-            validator: (value){
-              if(value!.isEmpty){
-                return "Please Provide Your amount";
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              hintText: 'Amount',
-              border: const OutlineInputBorder(),
-              suffixIcon : IconButton(
-                onPressed: (){
-                  amountController.clear();
-                },
-                icon: const Icon(Icons.clear),
-              ),
-            ) ,
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-            MaterialButton(
-              onPressed: (){
-                validation();
-              },
-            color: Colors.cyan,
-            child: const Text('Add',style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    ),
-  ),
-  );
+        ),
+      );
 }
 
 // import 'package:flutter/material.dart';
